@@ -1,17 +1,20 @@
-import { NextResponse } from 'next/server';
 import { verifyToken } from '../../../lib/auth';
 
-export async function GET(request) {
+export default async function handler(req, res) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   try {
-    const token = request.cookies.get('auth-token')?.value;
+    const token = req.cookies['auth-token'];
 
     if (!token) {
-      return NextResponse.json({ error: 'No token provided' }, { status: 401 });
+      return res.status(401).json({ error: 'No token provided' });
     }
 
     const decoded = verifyToken(token);
     
-    return NextResponse.json({
+    return res.status(200).json({
       user: {
         id: decoded.userId,
         email: decoded.email,
@@ -20,6 +23,7 @@ export async function GET(request) {
     });
 
   } catch (error) {
-    return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+    console.error('Auth me error:', error);
+    return res.status(401).json({ error: 'Invalid token', details: error.message });
   }
 }
