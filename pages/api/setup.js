@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { hashPassword } from '../../../lib/auth';
-import { query } from '../../../lib/database';
+import { hashPassword } from '../../lib/auth';
+import { query } from '../../lib/database';
 
 export async function POST(request) {
   try {
