@@ -44,12 +44,12 @@ export async function POST(request) {
   } catch (error) {
     console.error('Setup error:', error);
     return NextResponse.json({ 
-      error: 'Failed to create admin user' 
+      error: 'Failed to create admin user',
+      details: error.message
     }, { status: 500 });
   }
 }
 
-// Only allow GET to show setup form
 export async function GET() {
   return NextResponse.json({
     message: 'Setup endpoint - use POST to create admin user',
