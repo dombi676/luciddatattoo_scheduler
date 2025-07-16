@@ -3,19 +3,17 @@
 
 -- Enable Row Level Security on all tables
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
-ALTER TABLE clients ENABLE ROW LEVEL SECURITY;
 ALTER TABLE appointments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE working_hours ENABLE ROW LEVEL SECURITY;
-ALTER TABLE day_overrides ENABLE ROW LEVEL SECURITY;
+ALTER TABLE availability_overrides ENABLE ROW LEVEL SECURITY;
 ALTER TABLE booking_links ENABLE ROW LEVEL SECURITY;
 
 -- Create policies for API access (service role bypass)
 -- These policies allow your Next.js API routes to access all data
 CREATE POLICY "Service role access" ON users FOR ALL USING (true);
-CREATE POLICY "Service role access" ON clients FOR ALL USING (true);
 CREATE POLICY "Service role access" ON appointments FOR ALL USING (true);
 CREATE POLICY "Service role access" ON working_hours FOR ALL USING (true);
-CREATE POLICY "Service role access" ON day_overrides FOR ALL USING (true);
+CREATE POLICY "Service role access" ON availability_overrides FOR ALL USING (true);
 CREATE POLICY "Service role access" ON booking_links FOR ALL USING (true);
 
 -- Optional: Add real-time functionality for appointments
@@ -41,14 +39,13 @@ CREATE TRIGGER appointment_created
 -- Add indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_appointments_start_time ON appointments(start_time);
 CREATE INDEX IF NOT EXISTS idx_appointments_status ON appointments(status);
-CREATE INDEX IF NOT EXISTS idx_appointments_client_id ON appointments(client_id);
-CREATE INDEX IF NOT EXISTS idx_booking_links_expiry ON booking_links(expiry_date);
-CREATE INDEX IF NOT EXISTS idx_booking_links_active ON booking_links(is_active);
+CREATE INDEX IF NOT EXISTS idx_appointments_user_id ON appointments(user_id);
+CREATE INDEX IF NOT EXISTS idx_booking_links_expires ON booking_links(expires_at);
+CREATE INDEX IF NOT EXISTS idx_booking_links_token ON booking_links(token);
 
 -- Add helpful comments
 COMMENT ON TABLE users IS 'Admin users for the tattoo scheduling system';
-COMMENT ON TABLE clients IS 'Client information for appointments';
 COMMENT ON TABLE appointments IS 'Scheduled tattoo appointments';
 COMMENT ON TABLE working_hours IS 'Weekly working schedule';
-COMMENT ON TABLE day_overrides IS 'Specific day availability overrides';
+COMMENT ON TABLE availability_overrides IS 'Specific day availability overrides';
 COMMENT ON TABLE booking_links IS 'One-time booking links for clients';
