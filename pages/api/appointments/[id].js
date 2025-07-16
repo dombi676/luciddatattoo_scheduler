@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { verifyToken } from '../../../../lib/auth';
-import { query } from '../../../../lib/database';
+import { verifyToken } from '../../../lib/auth';
+import { query } from '../../../lib/database';
 
 export async function PUT(request, { params }) {
   try {
